@@ -23,29 +23,6 @@
   z-index: 10;
 }
 
-.centerContent {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.clock {
-  font-size: 96px;
-  font-weight: 200;
-  margin: 0;
-  line-height: 1;
-}
-
-.date {
-  font-size: 24px;
-  font-weight: 400;
-  margin-top: 10px;
-  opacity: 0.9;
-}
-
 .dockContainer {
   position: absolute;
   bottom: 0;

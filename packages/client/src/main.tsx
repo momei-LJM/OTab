@@ -1,10 +1,21 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { AppContext } from './context';
+import { useAppContext } from './hooks/useAppContext';
 import './styles/global.scss';
+
+function Provider({ children }: { children: React.ReactNode }) {
+  const { appContext } = useAppContext();
+  return (
+    <AppContext.Provider value={appContext}>{children}</AppContext.Provider>
+  );
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Provider>
+      <App />
+    </Provider>
   </StrictMode>
 );
