@@ -8,12 +8,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  pointer-events: none; // Allow clicking through if we want non-modal windows later, but for now modal is fine.
-  // Actually for a modal, we want pointer-events auto on the overlay if it's a backdrop.
-  // But let's make it a non-blocking overlay for now so we can have multiple windows conceptually,
-  // though this implementation is a centered modal.
-  pointer-events: auto;
-  // background: rgba(0, 0, 0, 0.1); // Optional dimming
+  width: fit-content;
+  height: fit-content;
 }
 
 .window {

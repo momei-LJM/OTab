@@ -1,4 +1,4 @@
-interface Source {
+export interface Source {
   type: 'floder' | 'link';
   name: string;
   parent?: string;
@@ -12,8 +12,13 @@ interface Source {
   };
   children?: Source[];
 }
-
-interface OTabConfig {
+export interface WindowSnapshot {
+  type: 'folder' | 'app';
+  trigger: string; //触发窗口打开的来源 path
+  zIndex: number;
+  isOpen: boolean;
+}
+export interface OTabConfig {
   searchEngine: 'google' | 'bing' | 'duckduckgo' | 'brave' | 'yahoo';
   // showWeather: boolean;
   // showQuotes: boolean;
@@ -25,8 +30,11 @@ interface OTabConfig {
   sources: Source[];
 }
 
+export interface SnapShot {
+  activeWindows: WindowSnapshot[];
+}
 export interface AppCtx {
-  snapshot?: Record<string, any>;
+  snapshot?: SnapShot;
   config: OTabConfig;
 }
 export const defineDefaultCofig = (config: OTabConfig) => config;

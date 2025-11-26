@@ -1,0 +1,7 @@
+@use './mixins.scss' as *;
+:root {
+  @include genVariable('primary-color', #007aff);
+  @include genVariable('background-color', #1e1e1e);
+  @include genVariable('text-color', #ffffff);
+  @include genVariable('accent-color', #ff9500);
+}

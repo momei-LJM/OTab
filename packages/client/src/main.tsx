@@ -6,10 +6,8 @@ import { useAppContext } from './hooks/useAppContext';
 import './styles/global.scss';
 
 function Provider({ children }: { children: React.ReactNode }) {
-  const { appContext } = useAppContext();
-  return (
-    <AppContext.Provider value={appContext}>{children}</AppContext.Provider>
-  );
+  const ctx = useAppContext();
+  return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;
 }
 
 createRoot(document.getElementById('root')!).render(

@@ -1,0 +1,5 @@
+@use './config.scss' as *;
+
+@mixin genVariable($name, $value) {
+  --#{$prefix}-#{$name}: #{$value};
+}

@@ -5,6 +5,7 @@ import { Clock } from '@/components/Clock';
 import { Dock, DockItem } from '@/components/Dock/Dock';
 import { Folder } from '@/components/Folder/Folder';
 import { AppContext } from '@/context';
+import { WindowManager } from './components/WindowManager';
 
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -15,8 +16,8 @@ function App() {
     <div className={styles.desktop}>
       {/* Desktop Icons Area */}
       <div className={styles.desktopGrid}>
-        {ctx.config.sources.map((source) => (
-          <Folder key={source.path} name={source.name} />
+        {ctx.appContext.config.sources.map((source) => (
+          <Folder key={source.path} name={source.name} source={source} />
         ))}
       </div>
 
@@ -47,6 +48,7 @@ function App() {
           </DockItem>
         </Dock>
       </div>
+      <WindowManager />
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { AppCtx } from '@/config';
-import { useState } from 'react';
+import { getCtxStorage } from '@/storage';
+import { useMemo, useState } from 'react';
+import { useWindowContext } from './useWindowContext';
 
 export const defaultData: AppCtx = {
   config: {
@@ -28,8 +30,27 @@ export const defaultData: AppCtx = {
       },
     ],
   },
+  snapshot: {
+    activeWindows: [],
+  },
 };
 export function useAppContext() {
-  const [appContext, setAppContext] = useState<AppCtx>(defaultData);
-  return { appContext, setAppContext };
+  const storageCtx = getCtxStorage();
+  const localSnapshot: AppCtx['snapshot'] = storageCtx?.snapshot ?? {
+    activeWindows: [],
+  };
+  const [appContext, setAppContext] = useState<AppCtx>(
+    storageCtx || defaultData
+  );
+
+  const flatedSource = useMemo(() => {
+    return appContext.config.sources.reduce((map, source) => {
+      map.set(source.path, source);
+      return map;
+    }, new Map<string, (typeof appContext.config.sources)[number]>());
+  }, [appContext.config.sources]);
+
+  const windowContext = useWindowContext();
+
+  return { appContext, setAppContext, flatedSource, windowContext };
 }
