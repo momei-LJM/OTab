@@ -10,7 +10,8 @@ export const AppContext = createContext<{
     activeWindows: WindowSnapshot[];
     createWindow: (window: Omit<WindowSnapshot, 'zIndex'>) => void;
     updateWindow: (window: WindowSnapshot) => void;
-    closeWindow: (path: string) => void;
+    closeWindow: (trigger: string) => void;
+    focusWindow: (window: WindowSnapshot) => void;
   };
 }>({
   appContext: defaultData,
@@ -21,5 +22,6 @@ export const AppContext = createContext<{
     createWindow: () => {},
     updateWindow: () => {},
     closeWindow: () => {},
+    focusWindow: () => {},
   },
 });

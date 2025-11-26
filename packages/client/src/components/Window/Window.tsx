@@ -9,6 +9,7 @@ interface WindowProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Window = ({
@@ -17,6 +18,7 @@ export const Window = ({
   title,
   children,
   className,
+  style,
 }: WindowProps) => {
   return (
     <AnimatePresence>
@@ -26,6 +28,7 @@ export const Window = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          style={style}
         >
           <motion.div
             className={clsx(styles.window, className)}

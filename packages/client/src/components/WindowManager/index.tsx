@@ -1,4 +1,3 @@
-import { useWindowContext } from '@/hooks/useWindowContext';
 import { ContentRender } from '../Folder/Folder';
 import { Window } from '@/components/Window/Window';
 import { useContext } from 'react';
@@ -13,6 +12,7 @@ export const WindowManager: React.FC = () => {
           isOpen={win.isOpen}
           onClose={() => windowContext.closeWindow(win.trigger)}
           title={flatedSource.get(win.trigger)?.name || 'unknown'}
+          style={{ zIndex: win.zIndex }}
         >
           <ContentRender />
         </Window>
