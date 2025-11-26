@@ -1,0 +1,116 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none; // Allow clicking through if we want non-modal windows later, but for now modal is fine.
+  // Actually for a modal, we want pointer-events auto on the overlay if it's a backdrop.
+  // But let's make it a non-blocking overlay for now so we can have multiple windows conceptually,
+  // though this implementation is a centered modal.
+  pointer-events: auto;
+  // background: rgba(0, 0, 0, 0.1); // Optional dimming
+}
+
+.window {
+  width: 600px;
+  height: 400px;
+  background: rgba(245, 245, 245, 0.85); // Light mode base
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 20px 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(40, 40, 40, 0.85);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.header {
+  height: 38px; // Standard macOS title bar height is around 28-38px depending on app
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: transparent;
+  user-select: none;
+  // Draggable region would go here
+}
+
+.trafficLights {
+  display: flex;
+  gap: 8px;
+  width: 60px; // Fixed width to balance title centering
+}
+
+.trafficLight {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: transparent;
+  transition: color 0.1s;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  &.close {
+    background: #ff5f57;
+    border: 1px solid #e0443e;
+  }
+
+  &.minimize {
+    background: #febc2e;
+    border: 1px solid #d89e24;
+  }
+
+  &.maximize {
+    background: #28c840;
+    border: 1px solid #1aab29;
+  }
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  opacity: 0.8;
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
+}
+
+.spacer {
+  width: 60px; // Balance the traffic lights
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  color: #333;
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
+}
