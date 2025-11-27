@@ -1,0 +1,37 @@
+// SearchBar 组件样式 Map
+$search-bar-theme: (
+  'search-bg': linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    ),
+  'search-bg-focus': linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0.15)
+    ),
+  'search-border': rgba(255, 255, 255, 0.18),
+  'search-border-highlight': rgba(255, 255, 255, 0.4),
+  'search-border-focus': rgba(255, 255, 255, 0.5),
+  'search-radius': 24px,
+  'search-shadow': (
+    0 8px 32px 0 rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 0 20px rgba(255, 255, 255, 0.05),
+  ),
+  'search-shadow-focus': (
+    0 12px 40px 0 rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 0 30px rgba(255, 255, 255, 0.1),
+  ),
+  'dropdown-bg': linear-gradient(
+      135deg,
+      rgba(30, 30, 30, 0.9),
+      rgba(30, 30, 30, 0.7)
+    ),
+  'dropdown-border': rgba(255, 255, 255, 0.1),
+  'dropdown-shadow': (
+    0 8px 32px 0 rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.02),
+  ),
+);

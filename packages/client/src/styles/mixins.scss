@@ -1,5 +1,15 @@
 @use './config.scss' as *;
-
-@mixin genVariable($name, $value) {
+/*定义css变量*/
+@mixin defineCssVar($name, $value) {
   --#{$prefix}-#{$name}: #{$value};
+}
+/*应用css变量*/
+@function getVar($name) {
+  @return var(--#{$prefix}-#{$name});
+}
+/*将组件变量展开*/
+@mixin defineThemeVars($map) {
+  @each $key, $value in $map {
+    @include defineCssVar($key, $value);
+  }
 }

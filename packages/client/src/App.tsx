@@ -4,6 +4,7 @@ import styles from '@/App.module.scss';
 import { Clock } from '@/components/Clock';
 import { Dock, DockItem } from '@/components/Dock/Dock';
 import { Folder } from '@/components/Folder/Folder';
+import { SearchBar } from '@/components/SearchBar';
 import { AppContext } from '@/context';
 import { WindowManager } from './components/WindowManager';
 
@@ -22,7 +23,10 @@ function App() {
       </div>
 
       {/* Main Content / Wallpaper Area */}
-      <Clock />
+      <div className={styles.centerContent}>
+        <Clock />
+        <SearchBar />
+      </div>
 
       {/* Dock */}
       <div className={styles.dockContainer}>

@@ -1,0 +1,223 @@
+@use '@/styles/mixins.scss' as *;
+
+.searchBar {
+  position: fixed;
+  width: 100%;
+  max-width: 560px;
+  z-index: 100;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  /* 液态玻璃效果 */
+  background: getVar('search-bg');
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: getVar('search-radius');
+  border: 1px solid getVar('search-border');
+  border-top: 1px solid getVar('search-border-highlight');
+  border-left: 1px solid getVar('search-border-highlight');
+  /* overflow: hidden; 移除此行以允许下拉菜单显示 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: getVar('search-shadow');
+
+  &:focus-within {
+    background: getVar('search-bg-focus');
+    border-color: getVar('search-border-focus');
+    box-shadow: getVar('search-shadow-focus');
+    transform: translateY(-1px) scale(1.005);
+  }
+}
+
+.engineSelector {
+  position: relative;
+}
+
+.engineButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s ease;
+  border-radius: 24px 0 0 24px; /* 适配父容器圆角 */
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.engineIcon {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  object-fit: contain;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chevron {
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  background: getVar('dropdown-bg');
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 16px;
+  border: 1px solid getVar('dropdown-border');
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px;
+  min-width: 180px;
+  box-shadow: getVar('dropdown-shadow');
+  z-index: 1000;
+  transform-origin: top left;
+  animation: dropdownIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(2px);
+  }
+
+  &.active {
+    background: rgba(0, 122, 255, 0.3);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+  }
+
+  .engineIcon {
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+  min-width: 0;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+  }
+
+  &:focus::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin-right: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: scale(1.1);
+  }
+}
+
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 24px 24px 0; /* 适配父容器圆角 */
+
+  &:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}

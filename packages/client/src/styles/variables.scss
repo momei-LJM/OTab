@@ -1,7 +1,12 @@
+@use './components/index.scss' as *;
 @use './mixins.scss' as *;
+
 :root {
-  @include genVariable('primary-color', #007aff);
-  @include genVariable('background-color', #1e1e1e);
-  @include genVariable('text-color', #ffffff);
-  @include genVariable('accent-color', #ff9500);
+  @include defineCssVar('primary-color', #007aff);
+  @include defineCssVar('background-color', #1e1e1e);
+  @include defineCssVar('text-color', #ffffff);
+  @include defineCssVar('accent-color', #ff9500);
+
+  // 生成 SearchBar 变量
+  @include defineThemeVars($search-bar-theme);
 }
