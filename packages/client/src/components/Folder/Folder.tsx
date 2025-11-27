@@ -1,10 +1,10 @@
-import { Folder as FolderIcon } from 'lucide-react';
-import styles from './Folder.module.scss';
-import clsx from 'clsx';
-import { useContext, useState } from 'react';
-import { Window } from '@/components/Window/Window';
-import { AppContext } from '@/context';
 import { Source } from '@/config';
+import { WindowsContext } from '@/context';
+import { getCssVar } from '@/utils';
+import clsx from 'clsx';
+import { Folder as FolderIcon } from 'lucide-react';
+import { useContext } from 'react';
+import styles from './Folder.module.scss';
 interface FolderProps {
   name: string;
   onClick?: () => void;
@@ -15,11 +15,10 @@ export const ContentRender = (data?: any) => {
   return <div>Folder Content for </div>;
 };
 export const Folder = ({ name, onClick, className, source }: FolderProps) => {
-  const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const { windowContext } = useContext(AppContext);
+  const { createWindow } = useContext(WindowsContext);
 
   const create = () => {
-    windowContext.createWindow({
+    createWindow({
       type: 'folder',
       trigger: source.path,
       isOpen: true,
@@ -35,8 +34,8 @@ export const Folder = ({ name, onClick, className, source }: FolderProps) => {
       <div className={styles.iconWrapper}>
         <FolderIcon
           className={styles.icon}
-          fill="#007AFF"
-          stroke="#007AFF"
+          fill={getCssVar('primary-color')}
+          stroke={getCssVar('primary-color')}
           onClick={create}
         />
       </div>

@@ -1,16 +1,17 @@
 import { ContentRender } from '../Folder/Folder';
 import { Window } from '@/components/Window/Window';
 import { useContext } from 'react';
-import { AppContext } from '@/context';
+import { AppContext, WindowsContext } from '@/context';
 export const WindowManager: React.FC = () => {
-  const { flatedSource, windowContext } = useContext(AppContext);
+  const { flatedSource } = useContext(AppContext);
+  const { activeWindows, closeWindow } = useContext(WindowsContext);
   return (
     <div>
-      {windowContext.activeWindows.map((win) => (
+      {activeWindows.map((win) => (
         <Window
           key={win.trigger}
           isOpen={win.isOpen}
-          onClose={() => windowContext.closeWindow(win.trigger)}
+          onClose={() => closeWindow(win.trigger)}
           title={flatedSource.get(win.trigger)?.name || 'unknown'}
           style={{ zIndex: win.zIndex }}
         >
