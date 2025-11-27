@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react';
+
 export interface Source {
   type: 'floder' | 'link';
   name: string;
@@ -16,6 +18,7 @@ export interface WindowSnapshot {
   type: 'folder' | 'app';
   trigger: string; //触发窗口打开的来源 path
   zIndex: number;
+  style?: CSSProperties;
   isOpen: boolean;
 }
 export interface OTabConfig {

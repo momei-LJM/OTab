@@ -13,7 +13,7 @@ export const WindowManager: React.FC = () => {
           isOpen={win.isOpen}
           onClose={() => closeWindow(win.trigger)}
           title={flatedSource.get(win.trigger)?.name || 'unknown'}
-          style={{ zIndex: win.zIndex }}
+          style={{ zIndex: win.zIndex, ...(win.style || {}) }}
         >
           <ContentRender />
         </Window>

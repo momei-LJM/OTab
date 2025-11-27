@@ -1,6 +1,7 @@
 import { SnapShot } from '@/config';
 import { getCtxStorage } from '@/storage';
 import { logger } from '@/utils/logger';
+import { calcWindowPosition, positionToStyles } from '@/utils/windowPosition';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 export const useWindowsContext = () => {
@@ -29,10 +30,19 @@ export const useWindowsContext = () => {
         }
         const zIndex = globalIndex.current + 1;
         globalIndex.current = zIndex;
+
+        // 计算新窗口位置
+        const position = calcWindowPosition(prev.filter((w) => w.isOpen));
+        const style = {
+          ...window.style,
+          ...positionToStyles(position),
+        };
+
         return [
           ...prev,
           {
             ...window,
+            style,
             zIndex,
           },
         ];
