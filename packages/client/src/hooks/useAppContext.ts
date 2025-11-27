@@ -1,13 +1,8 @@
-import { SnapShot, Source } from '@/config';
-import { AppCtx } from '@/config';
-import { getCtxStorage, setCtxStorage } from '@/storage';
-import {
-  tranformNavFormItab,
-  transformAdapter,
-  tree2Map,
-} from '@/utils/common';
+import { AppCtx, Source } from '@/config';
+import { getCtxStorage } from '@/storage';
+import { transformAdapter, tree2Map } from '@/utils/common';
 import { logger } from '@/utils/logger';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import itabData from '../../private.itabdata.json';
 export const defaultData: AppCtx = {
   config: {
@@ -15,6 +10,8 @@ export const defaultData: AppCtx = {
     theme: 'light',
     backgroundImageUrl:
       'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=3870&auto=format&fit=crop',
+
+    // backgroundImageUrl: '/bg/local_bg.png',
     sources: [
       {
         type: 'floder',

@@ -7,7 +7,7 @@ import { Folder } from '@/components/Folder/Folder';
 import { SearchBar } from '@/components/SearchBar';
 import { AppContext } from '@/context';
 import { WindowManager } from '@/components/WindowManager';
-
+import { Bg } from '@/components/Bg/index';
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -15,6 +15,19 @@ function App() {
 
   return (
     <div className={styles.desktop}>
+      {/* <video
+        src={ctx.appContext.config.backgroundImageUrl}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1,
+        }}
+      ></video> */}
+      <Bg url={ctx.appContext.config.backgroundImageUrl!} />
       {/* Desktop Icons Area */}
       <div className={styles.desktopGrid}>
         {ctx.appContext.config.sources.map((source) => (
