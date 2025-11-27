@@ -1,9 +1,14 @@
-import { SnapShot } from '@/config';
+import { SnapShot, Source } from '@/config';
 import { AppCtx } from '@/config';
 import { getCtxStorage, setCtxStorage } from '@/storage';
+import {
+  tranformNavFormItab,
+  transformAdapter,
+  tree2Map,
+} from '@/utils/common';
 import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-
+import itabData from '../../private.itabdata.json';
 export const defaultData: AppCtx = {
   config: {
     searchEngine: 'bing',
@@ -38,18 +43,23 @@ export const defaultData: AppCtx = {
 export function useAppContext() {
   const storageCtx = getCtxStorage();
 
-  const [appContext, setAppContext] = useState<AppCtx>(
-    storageCtx || defaultData
-  );
-  logger.info('AppContext 执行');
+  const transformer = new transformAdapter({ source: 'itab' });
+  const sources = transformer.transformSource(itabData.navConfig);
+
+  const initData = storageCtx || defaultData;
+  const [appContext, setAppContext] = useState<AppCtx>({
+    ...initData,
+    config: {
+      ...initData.config,
+      sources: [...initData.config.sources, ...sources],
+    },
+  });
 
   const flatedSource = useMemo(() => {
-    return appContext.config.sources.reduce((map, source) => {
-      map.set(source.path, source);
-      return map;
-    }, new Map<string, (typeof appContext.config.sources)[number]>());
+    return tree2Map<Source>(appContext.config.sources, 'path');
   }, [appContext.config.sources]);
 
+  logger.info('AppContext 执行', sources, flatedSource);
   // 使用 useMemo 稳定返回值的引用
   return useMemo(
     () => ({ appContext, setAppContext, flatedSource }),

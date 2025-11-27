@@ -11,9 +11,7 @@ interface FolderProps {
   className?: string;
   source: Source;
 }
-export const ContentRender = (data?: any) => {
-  return <div>Folder Content for </div>;
-};
+
 export const Folder = ({ name, onClick, className, source }: FolderProps) => {
   const { createWindow } = useContext(WindowsContext);
 

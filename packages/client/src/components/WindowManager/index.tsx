@@ -1,4 +1,4 @@
-import { ContentRender } from '../Folder/Folder';
+import { ContentRender } from '../Folder/ContentRender';
 import { Window } from '@/components/Window/Window';
 import { useContext } from 'react';
 import { AppContext, WindowsContext } from '@/context';
@@ -26,7 +26,7 @@ export const WindowManager: React.FC = () => {
             });
           }}
         >
-          <ContentRender />
+          <ContentRender data={win} />
         </Window>
       ))}
     </div>

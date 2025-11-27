@@ -2,16 +2,12 @@ import { CSSProperties } from 'react';
 
 export interface Source {
   type: 'floder' | 'link';
+  url?: string; //type为link时需要填
+  icon?: string; //type为link时需要填
   name: string;
-  parent?: string;
-  path: string;
-  style?: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    rounded: number;
-  };
+  parent?: string; //父级path
+  path: string; //唯一，通过拼接name获得；所以一个文件夹下name也必须是唯一的
+  style?: CSSProperties;
   children?: Source[];
 }
 export interface WindowSnapshot {
