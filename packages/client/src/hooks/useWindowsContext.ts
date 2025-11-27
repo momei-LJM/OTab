@@ -1,4 +1,4 @@
-import { SnapShot } from '@/config';
+import { SnapShot, WindowSnapshot } from '@/config';
 import { getCtxStorage } from '@/storage';
 import { logger } from '@/utils/logger';
 import { calcWindowPosition, positionToStyles } from '@/utils/windowPosition';
@@ -21,84 +21,71 @@ export const useWindowsContext = () => {
   );
 
   const [activeWindows, setAtiveWindows] = useState(initWinowsSnapshot);
+  const updateWindow = useCallback((window: WindowSnapshot) => {
+    setAtiveWindows((prev) => {
+      const target = prev.find((w) => w.trigger === window.trigger);
+      if (target) {
+        return prev.map((w) =>
+          w.trigger === window.trigger ? { ...w, ...window } : w
+        );
+      }
+      return prev;
+    });
+  }, []);
 
-  const createWindow = useCallback(
-    (window: Omit<SnapShot['activeWindows'][number], 'zIndex'>) => {
-      setAtiveWindows((prev) => {
-        if (prev.some((w) => w.trigger === window.trigger)) {
-          return prev;
-        }
-        const zIndex = globalIndex.current + 1;
-        globalIndex.current = zIndex;
+  const createWindow = useCallback((window: Omit<WindowSnapshot, 'zIndex'>) => {
+    setAtiveWindows((prev) => {
+      if (prev.some((w) => w.trigger === window.trigger)) {
+        return prev;
+      }
+      const zIndex = globalIndex.current + 1;
+      globalIndex.current = zIndex;
 
-        // 计算新窗口位置
-        const position = calcWindowPosition(prev.filter((w) => w.isOpen));
-        const style = {
-          ...window.style,
-          ...positionToStyles(position),
-        };
+      // 计算新窗口位置
+      const position = calcWindowPosition(prev.filter((w) => w.isOpen));
+      const style = {
+        ...window.style,
+        ...positionToStyles(position),
+      };
 
-        return [
-          ...prev,
-          {
-            ...window,
-            style,
-            zIndex,
-          },
-        ];
-      });
-    },
-    []
-  );
+      return [
+        ...prev,
+        {
+          ...window,
+          style,
+          zIndex,
+        },
+      ];
+    });
+  }, []);
 
   const focusWindow = useCallback(
-    (window: SnapShot['activeWindows'][number]) => {
-      setAtiveWindows((prev) => {
-        const isMaxNow = prev.every((w) => w.zIndex <= window.zIndex);
-        if (isMaxNow) {
-          return prev;
-        }
-        const target = prev.find((w) => w.trigger === window.trigger);
-        if (target) {
-          const zIndex = globalIndex.current + 1;
-          globalIndex.current = zIndex;
-          return prev.map((w) =>
-            w.trigger === window.trigger ? { ...w, zIndex } : w
-          );
-        }
-        return prev;
-      });
+    (window: WindowSnapshot) => {
+      const isMaxNow = activeWindows.every((w) => w.zIndex <= window.zIndex);
+      if (isMaxNow) {
+        return;
+      }
+      const target = activeWindows.find((w) => w.trigger === window.trigger);
+      if (target) {
+        const zIndex = globalIndex.current + 1;
+        globalIndex.current = zIndex;
+        updateWindow({ ...window, zIndex });
+      }
     },
-    []
+    [activeWindows, updateWindow]
   );
 
-  const updateWindow = useCallback(
-    (window: SnapShot['activeWindows'][number]) => {
-      setAtiveWindows((prev) => {
-        const target = prev.find((w) => w.trigger === window.trigger);
-        if (target) {
-          return prev.map((w) =>
-            w.trigger === window.trigger ? { ...w, ...window } : w
-          );
-        }
-        return prev;
-      });
-    },
-    []
-  );
-
-  const closeWindow = useCallback((trigger: string) => {
-    setAtiveWindows((prev) => {
-      const updated = prev.map((w) =>
-        w.trigger === trigger ? { ...w, isOpen: false } : w
-      );
+  const closeWindow = useCallback(
+    (trigger: string) => {
+      const updated = activeWindows.find((w) => w.trigger === trigger);
+      updateWindow({ ...updated!, isOpen: false });
       // 延迟清理已关闭的窗口
       setTimeout(() => {
         setAtiveWindows((current) => current.filter((w) => w.isOpen));
       }, 300);
-      return updated;
-    });
-  }, []);
+    },
+    [activeWindows, updateWindow]
+  );
 
   // 使用 useMemo 稳定返回值的引用
   return useMemo(

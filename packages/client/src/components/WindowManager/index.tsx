@@ -4,7 +4,8 @@ import { useContext } from 'react';
 import { AppContext, WindowsContext } from '@/context';
 export const WindowManager: React.FC = () => {
   const { flatedSource } = useContext(AppContext);
-  const { activeWindows, closeWindow } = useContext(WindowsContext);
+  const { activeWindows, closeWindow, focusWindow, updateWindow } =
+    useContext(WindowsContext);
   return (
     <div>
       {activeWindows.map((win) => (
@@ -14,6 +15,16 @@ export const WindowManager: React.FC = () => {
           onClose={() => closeWindow(win.trigger)}
           title={flatedSource.get(win.trigger)?.name || 'unknown'}
           style={{ zIndex: win.zIndex, ...(win.style || {}) }}
+          onFocus={() => focusWindow(win)}
+          onUpdate={(updates) => {
+            updateWindow({
+              ...win,
+              style: {
+                ...win.style,
+                ...updates,
+              },
+            });
+          }}
         >
           <ContentRender />
         </Window>

@@ -1,20 +1,19 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1000;
-  width: fit-content;
-  height: fit-content;
+  width: 600px;
+  height: 400px;
+}
+
+.centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .window {
-  width: 600px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   background: rgba(245, 245, 245, 0.85); // Light mode base
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -109,4 +108,78 @@
   @media (prefers-color-scheme: dark) {
     color: #fff;
   }
+}
+
+.resizeHandle {
+  position: absolute;
+  z-index: 10;
+  touch-action: none;
+}
+
+.resizeHandleTop {
+  top: -5px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.resizeHandleBottom {
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.resizeHandleLeft {
+  left: -5px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.resizeHandleRight {
+  right: -5px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.resizeHandleTopLeft {
+  top: -5px;
+  left: -5px;
+  width: 15px;
+  height: 15px;
+  cursor: nwse-resize;
+  z-index: 11;
+}
+
+.resizeHandleTopRight {
+  top: -5px;
+  right: -5px;
+  width: 15px;
+  height: 15px;
+  cursor: nesw-resize;
+  z-index: 11;
+}
+
+.resizeHandleBottomLeft {
+  bottom: -5px;
+  left: -5px;
+  width: 15px;
+  height: 15px;
+  cursor: nesw-resize;
+  z-index: 11;
+}
+
+.resizeHandleBottomRight {
+  bottom: -5px;
+  right: -5px;
+  width: 15px;
+  height: 15px;
+  cursor: nwse-resize;
+  z-index: 11;
 }

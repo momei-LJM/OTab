@@ -6,7 +6,7 @@ import { Dock, DockItem } from '@/components/Dock/Dock';
 import { Folder } from '@/components/Folder/Folder';
 import { SearchBar } from '@/components/SearchBar';
 import { AppContext } from '@/context';
-import { WindowManager } from './components/WindowManager';
+import { WindowManager } from '@/components/WindowManager';
 
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
