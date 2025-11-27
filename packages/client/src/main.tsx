@@ -7,15 +7,26 @@ import './styles/global.scss';
 import './styles/variables.scss';
 import { useWindowsContext } from '@/hooks/useWindowsContext';
 
-function Provider({ children }: { children: React.ReactNode }) {
+// 拆分成独立的 Provider 组件，避免状态更新互相影响
+function AppContextProvider({ children }: { children: React.ReactNode }) {
   const ctx = useAppContext();
+  return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;
+}
+
+function WindowsContextProvider({ children }: { children: React.ReactNode }) {
   const windowsCtx = useWindowsContext();
   return (
-    <AppContext.Provider value={ctx}>
-      <WindowsContext.Provider value={windowsCtx}>
-        {children}
-      </WindowsContext.Provider>
-    </AppContext.Provider>
+    <WindowsContext.Provider value={windowsCtx}>
+      {children}
+    </WindowsContext.Provider>
+  );
+}
+
+function Provider({ children }: { children: React.ReactNode }) {
+  return (
+    <AppContextProvider>
+      <WindowsContextProvider>{children}</WindowsContextProvider>
+    </AppContextProvider>
   );
 }
 

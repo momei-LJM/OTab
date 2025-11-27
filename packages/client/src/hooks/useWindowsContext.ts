@@ -1,14 +1,16 @@
 import { SnapShot } from '@/config';
 import { getCtxStorage } from '@/storage';
-import { useState } from 'react';
+import { logger } from '@/utils/logger';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 export const useWindowsContext = () => {
+  logger.info('WindowsContext 执行');
   const storageCtx = getCtxStorage();
 
   const initWinowsSnapshot: SnapShot['activeWindows'] =
     storageCtx?.snapshot?.activeWindows ?? [];
 
-  const [globalIndex, setGlobalIndex] = useState<number>(
+  const globalIndex = useRef<number>(
     Math.max(
       initWinowsSnapshot
         .map((w) => w.zIndex)
@@ -19,66 +21,84 @@ export const useWindowsContext = () => {
 
   const [activeWindows, setAtiveWindows] = useState(initWinowsSnapshot);
 
-  function createWindow(
-    window: Omit<SnapShot['activeWindows'][number], 'zIndex'>
-  ) {
-    if (activeWindows.some((w) => w.trigger === window.trigger)) {
-      return;
-    }
-    setGlobalIndex((idx) => idx + 1);
-    const zIndex = globalIndex;
-    setAtiveWindows([
-      ...activeWindows,
-      {
-        ...window,
-        zIndex,
-      },
-    ]);
-  }
+  const createWindow = useCallback(
+    (window: Omit<SnapShot['activeWindows'][number], 'zIndex'>) => {
+      setAtiveWindows((prev) => {
+        if (prev.some((w) => w.trigger === window.trigger)) {
+          return prev;
+        }
+        const zIndex = globalIndex.current + 1;
+        globalIndex.current = zIndex;
+        return [
+          ...prev,
+          {
+            ...window,
+            zIndex,
+          },
+        ];
+      });
+    },
+    []
+  );
 
-  function focusWindow(window: SnapShot['activeWindows'][number]) {
-    const isMaxNow = activeWindows.every((w) => w.zIndex <= window.zIndex);
-    if (isMaxNow) {
-      return;
-    }
-    const target = activeWindows.find((w) => w.trigger === window.trigger);
-    if (target) {
-      setGlobalIndex((idx) => idx + 1);
-      target.zIndex = globalIndex;
-      setAtiveWindows([...activeWindows]);
-    }
-  }
+  const focusWindow = useCallback(
+    (window: SnapShot['activeWindows'][number]) => {
+      setAtiveWindows((prev) => {
+        const isMaxNow = prev.every((w) => w.zIndex <= window.zIndex);
+        if (isMaxNow) {
+          return prev;
+        }
+        const target = prev.find((w) => w.trigger === window.trigger);
+        if (target) {
+          const zIndex = globalIndex.current + 1;
+          globalIndex.current = zIndex;
+          return prev.map((w) =>
+            w.trigger === window.trigger ? { ...w, zIndex } : w
+          );
+        }
+        return prev;
+      });
+    },
+    []
+  );
 
-  function updateWindow(window: SnapShot['activeWindows'][number]) {
-    const target = activeWindows.find((w) => w.trigger === window.trigger);
-    if (target) {
-      Object.assign(target, window);
-      setAtiveWindows([...activeWindows]);
-    }
-  }
+  const updateWindow = useCallback(
+    (window: SnapShot['activeWindows'][number]) => {
+      setAtiveWindows((prev) => {
+        const target = prev.find((w) => w.trigger === window.trigger);
+        if (target) {
+          return prev.map((w) =>
+            w.trigger === window.trigger ? { ...w, ...window } : w
+          );
+        }
+        return prev;
+      });
+    },
+    []
+  );
 
-  function cleanupWindows(clearAll: boolean = false) {
-    setTimeout(() => {
-      if (clearAll) {
-        setAtiveWindows([]);
-      } else {
-        const filtered = activeWindows.filter((w) => w.isOpen);
-        setAtiveWindows(filtered);
-      }
-    }, 300);
-  }
+  const closeWindow = useCallback((trigger: string) => {
+    setAtiveWindows((prev) => {
+      const updated = prev.map((w) =>
+        w.trigger === trigger ? { ...w, isOpen: false } : w
+      );
+      // 延迟清理已关闭的窗口
+      setTimeout(() => {
+        setAtiveWindows((current) => current.filter((w) => w.isOpen));
+      }, 300);
+      return updated;
+    });
+  }, []);
 
-  function closeWindow(trigger: string) {
-    const finded = activeWindows.find((w) => w.trigger === trigger);
-    finded && (finded.isOpen = false);
-    setAtiveWindows([...activeWindows]);
-    cleanupWindows();
-  }
-  return {
-    activeWindows,
-    createWindow,
-    updateWindow,
-    closeWindow,
-    focusWindow,
-  };
+  // 使用 useMemo 稳定返回值的引用
+  return useMemo(
+    () => ({
+      activeWindows,
+      createWindow,
+      updateWindow,
+      closeWindow,
+      focusWindow,
+    }),
+    [activeWindows, createWindow, updateWindow, closeWindow, focusWindow]
+  );
 };

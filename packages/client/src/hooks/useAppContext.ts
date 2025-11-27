@@ -1,6 +1,7 @@
 import { SnapShot } from '@/config';
 import { AppCtx } from '@/config';
 import { getCtxStorage, setCtxStorage } from '@/storage';
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export const defaultData: AppCtx = {
@@ -40,7 +41,7 @@ export function useAppContext() {
   const [appContext, setAppContext] = useState<AppCtx>(
     storageCtx || defaultData
   );
-  console.log('11111xxx');
+  logger.info('AppContext 执行');
 
   const flatedSource = useMemo(() => {
     return appContext.config.sources.reduce((map, source) => {
@@ -49,5 +50,9 @@ export function useAppContext() {
     }, new Map<string, (typeof appContext.config.sources)[number]>());
   }, [appContext.config.sources]);
 
-  return { appContext, setAppContext, flatedSource };
+  // 使用 useMemo 稳定返回值的引用
+  return useMemo(
+    () => ({ appContext, setAppContext, flatedSource }),
+    [appContext, flatedSource]
+  );
 }
