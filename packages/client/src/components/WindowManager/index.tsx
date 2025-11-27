@@ -23,7 +23,9 @@ export const WindowManager: React.FC = () => {
           onClose={() => closeWindow(win.trigger)}
           onMinimize={() => minimizeWindow(win.trigger)}
           onMaximize={() => toggleMaximizeWindow(win.trigger)}
-          title={flatedSource.get(win.trigger)?.name || 'unknown'}
+          title={
+            flatedSource.get(win.currentPath || win.trigger)?.name || 'unknown'
+          }
           style={{ zIndex: win.zIndex, ...(win.style || {}) }}
           onFocus={() => focusWindow(win)}
           onUpdate={(updates) => {

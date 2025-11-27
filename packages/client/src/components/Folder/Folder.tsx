@@ -15,17 +15,23 @@ interface FolderProps {
 export const Folder = ({ name, onClick, className, source }: FolderProps) => {
   const { createWindow } = useContext(WindowsContext);
 
-  const create = () => {
-    createWindow({
-      type: 'folder',
-      trigger: source.path,
-      isOpen: true,
-    });
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onClick) {
+      onClick();
+    } else {
+      createWindow({
+        type: 'folder',
+        trigger: source.path,
+        isOpen: true,
+      });
+    }
   };
+
   return (
     <div
       className={clsx(styles.folder, className)}
-      onClick={onClick}
+      onClick={handleOpen}
       role="button"
       tabIndex={0}
     >
@@ -34,7 +40,6 @@ export const Folder = ({ name, onClick, className, source }: FolderProps) => {
           className={styles.icon}
           fill={getCssVar('primary-color')}
           stroke={getCssVar('primary-color')}
-          onClick={create}
         />
       </div>
       <span className={styles.name}>{name}</span>

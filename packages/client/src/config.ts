@@ -13,6 +13,7 @@ export interface Source {
 export interface WindowSnapshot {
   type: 'folder' | 'app';
   trigger: string; //触发窗口打开的来源 path
+  currentPath?: string; // 当前显示的路径，用于窗口内导航
   zIndex: number;
   style?: CSSProperties;
   isOpen: boolean;

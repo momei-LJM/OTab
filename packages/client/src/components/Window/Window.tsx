@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { useRef } from 'react';
 import { useWindowInteraction } from '@/hooks/useWindowInteraction';
 import { ResizeHandles } from './ResizeHandles';
+import { WindowLocalContext } from './WindowLocalContext';
 
 interface WindowProps {
   isOpen: boolean;
@@ -94,47 +95,43 @@ export const Window = ({
                 : undefined
             }
           >
+            {/* Traffic Lights - Absolute Positioned */}
             <div
-              className={styles.header}
-              onPointerDown={!isMaximized ? handleDragStart : undefined}
-              onDoubleClick={onMaximize}
+              className={styles.trafficLightsOverlay}
+              onPointerDown={(e) => e.stopPropagation()}
             >
-              <div
-                className={styles.trafficLights}
-                onPointerDown={(e) => e.stopPropagation()}
+              <button
+                className={clsx(styles.trafficLight, styles.close)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                }}
               >
-                <button
-                  className={clsx(styles.trafficLight, styles.close)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClose();
-                  }}
-                >
-                  <X size={8} />
-                </button>
-                <button
-                  className={clsx(styles.trafficLight, styles.minimize)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onMinimize?.();
-                  }}
-                >
-                  <Minus size={8} />
-                </button>
-                <button
-                  className={clsx(styles.trafficLight, styles.maximize)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onMaximize?.();
-                  }}
-                >
-                  <Maximize2 size={8} />
-                </button>
-              </div>
-              <div className={styles.title}>{title}</div>
-              <div className={styles.spacer} />
+                <X size={8} />
+              </button>
+              <button
+                className={clsx(styles.trafficLight, styles.minimize)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMinimize?.();
+                }}
+              >
+                <Minus size={8} />
+              </button>
+              <button
+                className={clsx(styles.trafficLight, styles.maximize)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMaximize?.();
+                }}
+              >
+                <Maximize2 size={8} />
+              </button>
             </div>
-            <div className={styles.content}>{children}</div>
+
+            <WindowLocalContext.Provider value={{ handleDragStart }}>
+              <div className={styles.contentArea}>{children}</div>
+            </WindowLocalContext.Provider>
           </motion.div>
         </motion.div>
       )}
