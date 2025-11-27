@@ -15,6 +15,10 @@ interface WindowProps {
   style?: React.CSSProperties;
   onFocus?: () => void;
   onUpdate?: (updates: Partial<React.CSSProperties>) => void;
+  isMinimized?: boolean;
+  isMaximized?: boolean;
+  onMinimize?: () => void;
+  onMaximize?: () => void;
 }
 
 export const Window = ({
@@ -26,6 +30,10 @@ export const Window = ({
   style,
   onFocus,
   onUpdate,
+  isMinimized,
+  isMaximized,
+  onMinimize,
+  onMaximize,
 }: WindowProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -45,20 +53,34 @@ export const Window = ({
   const hasPosition =
     localStyle.left !== undefined || localStyle.top !== undefined;
 
+  const effectiveStyle = isMaximized
+    ? {
+        ...localStyle,
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        transform: 'none',
+        borderRadius: 0,
+      }
+    : localStyle;
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && !isMinimized && (
         <motion.div
           ref={overlayRef}
-          className={clsx(styles.overlay, { [styles.centered]: !hasPosition })}
+          className={clsx(styles.overlay, {
+            [styles.centered]: !hasPosition && !isMaximized,
+          })}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          style={localStyle}
+          style={effectiveStyle}
           onClick={onFocus}
         >
-          {/* Resize Handles */}
-          <ResizeHandles onResizeStart={handleResizeStart} />
+          {/* Resize Handles - disable if maximized */}
+          {!isMaximized && <ResizeHandles onResizeStart={handleResizeStart} />}
 
           <motion.div
             className={clsx(styles.window, className)}
@@ -66,19 +88,46 @@ export const Window = ({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            style={
+              isMaximized
+                ? { borderRadius: 0, width: '100%', height: '100%' }
+                : undefined
+            }
           >
-            <div className={styles.header} onPointerDown={handleDragStart}>
-              <div className={styles.trafficLights}>
+            <div
+              className={styles.header}
+              onPointerDown={!isMaximized ? handleDragStart : undefined}
+              onDoubleClick={onMaximize}
+            >
+              <div
+                className={styles.trafficLights}
+                onPointerDown={(e) => e.stopPropagation()}
+              >
                 <button
                   className={clsx(styles.trafficLight, styles.close)}
-                  onClick={onClose}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClose();
+                  }}
                 >
                   <X size={8} />
                 </button>
-                <button className={clsx(styles.trafficLight, styles.minimize)}>
+                <button
+                  className={clsx(styles.trafficLight, styles.minimize)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMinimize?.();
+                  }}
+                >
                   <Minus size={8} />
                 </button>
-                <button className={clsx(styles.trafficLight, styles.maximize)}>
+                <button
+                  className={clsx(styles.trafficLight, styles.maximize)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMaximize?.();
+                  }}
+                >
                   <Maximize2 size={8} />
                 </button>
               </div>

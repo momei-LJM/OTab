@@ -18,10 +18,14 @@ export const WindowsContext = createContext<{
   focusWindow: (window: WindowSnapshot) => void;
   updateWindow: (window: WindowSnapshot) => void;
   closeWindow: (trigger: string) => void;
+  minimizeWindow: (trigger: string) => void;
+  toggleMaximizeWindow: (trigger: string) => void;
 }>({
   activeWindows: [],
   createWindow: () => {},
   focusWindow: () => {},
   updateWindow: () => {},
   closeWindow: () => {},
+  minimizeWindow: () => {},
+  toggleMaximizeWindow: () => {},
 });

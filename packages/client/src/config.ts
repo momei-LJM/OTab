@@ -16,6 +16,8 @@ export interface WindowSnapshot {
   zIndex: number;
   style?: CSSProperties;
   isOpen: boolean;
+  isMinimized?: boolean;
+  isMaximized?: boolean;
 }
 export interface OTabConfig {
   searchEngine: 'google' | 'bing' | 'duckduckgo' | 'brave' | 'yahoo';

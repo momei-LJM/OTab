@@ -62,14 +62,34 @@ export const useWindowsContext = () => {
   const focusWindow = useCallback(
     (window: WindowSnapshot) => {
       const isMaxNow = activeWindows.every((w) => w.zIndex <= window.zIndex);
-      if (isMaxNow) {
+      if (isMaxNow && !window.isMinimized) {
         return;
       }
       const target = activeWindows.find((w) => w.trigger === window.trigger);
       if (target) {
         const zIndex = globalIndex.current + 1;
         globalIndex.current = zIndex;
-        updateWindow({ ...window, zIndex });
+        updateWindow({ ...window, zIndex, isMinimized: false });
+      }
+    },
+    [activeWindows, updateWindow]
+  );
+
+  const minimizeWindow = useCallback(
+    (trigger: string) => {
+      const target = activeWindows.find((w) => w.trigger === trigger);
+      if (target) {
+        updateWindow({ ...target, isMinimized: true });
+      }
+    },
+    [activeWindows, updateWindow]
+  );
+
+  const toggleMaximizeWindow = useCallback(
+    (trigger: string) => {
+      const target = activeWindows.find((w) => w.trigger === trigger);
+      if (target) {
+        updateWindow({ ...target, isMaximized: !target.isMaximized });
       }
     },
     [activeWindows, updateWindow]
@@ -95,7 +115,17 @@ export const useWindowsContext = () => {
       updateWindow,
       closeWindow,
       focusWindow,
+      minimizeWindow,
+      toggleMaximizeWindow,
     }),
-    [activeWindows, createWindow, updateWindow, closeWindow, focusWindow]
+    [
+      activeWindows,
+      createWindow,
+      updateWindow,
+      closeWindow,
+      focusWindow,
+      minimizeWindow,
+      toggleMaximizeWindow,
+    ]
   );
 };

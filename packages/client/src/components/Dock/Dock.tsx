@@ -32,9 +32,10 @@ interface DockItemProps {
   children: React.ReactNode;
   onClick?: () => void;
   mouseX?: MotionValue;
+  title?: string;
 }
 
-export const DockItem = ({ children, onClick }: DockItemProps) => {
+export const DockItem = ({ children, onClick, title }: DockItemProps) => {
   // In a real implementation with context, we would pass mouseX down.
   // For simplicity in this structure, we'll rely on CSS hover or simple framer motion if we want the wave effect.
   // To get the true macOS wave effect, we need access to the parent's mouseX.
@@ -55,6 +56,7 @@ export const DockItem = ({ children, onClick }: DockItemProps) => {
       onClick={onClick}
     >
       {children}
+      {title && <div className={styles.tooltip}>{title}</div>}
     </motion.div>
   );
 };
