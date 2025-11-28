@@ -1,21 +1,20 @@
+import type {
+  MotionValue,
+} from 'framer-motion'
+import clsx from 'clsx'
 import {
   motion,
   useMotionValue,
-  useSpring,
-  useTransform,
-  MotionValue,
-} from 'framer-motion';
-import { useRef } from 'react';
-import styles from './Dock.module.scss';
-import clsx from 'clsx';
+} from 'framer-motion'
+import styles from './Dock.module.scss'
 
 interface DockProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export const Dock = ({ children, className }: DockProps) => {
-  const mouseX = useMotionValue(Infinity);
+  const mouseX = useMotionValue(Infinity)
 
   return (
     <motion.div
@@ -25,14 +24,14 @@ export const Dock = ({ children, className }: DockProps) => {
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}
 
 interface DockItemProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  mouseX?: MotionValue;
-  title?: string;
+  children: React.ReactNode
+  onClick?: () => void
+  mouseX?: MotionValue
+  title?: string
 }
 
 export const DockItem = ({ children, onClick, title }: DockItemProps) => {
@@ -58,5 +57,5 @@ export const DockItem = ({ children, onClick, title }: DockItemProps) => {
       {children}
       {title && <div className={styles.tooltip}>{title}</div>}
     </motion.div>
-  );
-};
+  )
+}

@@ -1,10 +1,10 @@
-import React from 'react';
-import styles from './GlassContainer.module.scss';
-import clsx from 'clsx';
+import clsx from 'clsx'
+import React from 'react'
+import styles from './GlassContainer.module.scss'
 
 interface GlassContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  linear?: boolean;
+  children: React.ReactNode
+  linear?: boolean
 }
 
 export const GlassContainer: React.FC<GlassContainerProps> = ({
@@ -22,5 +22,5 @@ export const GlassContainer: React.FC<GlassContainerProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}

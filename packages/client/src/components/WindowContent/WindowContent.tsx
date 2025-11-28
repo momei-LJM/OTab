@@ -1,49 +1,48 @@
-import { WindowSnapshot } from '@/config';
-import { AppContext, WindowsContext } from '@/context';
-import { useContext } from 'react';
-import styles from './Folder.module.scss';
-import { Folder } from './Folder';
+import type { WindowSnapshot } from '@/config'
+import clsx from 'clsx'
 import {
-  Folder as FolderIcon,
-  HardDrive,
   ChevronLeft,
   ChevronRight,
-  Search,
+  Folder as FolderIcon,
+  HardDrive,
   LayoutGrid,
   List,
-  MoreHorizontal,
-} from 'lucide-react';
-import clsx from 'clsx';
-import { WindowLocalContext } from '../Window/WindowLocalContext';
-import { WindowSidebar } from '../Window/WindowSidebar';
-import { GlassContainer } from '../GlassContainer';
+  Search,
+} from 'lucide-react'
+import { use } from 'react'
+import { AppContext, WindowsContext } from '@/context'
+import { GlassContainer } from '../GlassContainer'
+import { SourceItem } from '../Source'
+import { WindowLocalContext } from '../Window/WindowLocalContext'
+import { WindowSidebar } from '../Window/WindowSidebar'
+import styles from './WindowContent.module.scss'
 
-export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
+export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
   data,
 }) => {
-  const { flatedSource, appContext } = useContext(AppContext);
-  const { updateWindow } = useContext(WindowsContext);
-  const { handleDragStart } = useContext(WindowLocalContext);
+  const { flatedSource, appContext } = use(AppContext)
+  const { updateWindow } = use(WindowsContext)
+  const { handleDragStart } = use(WindowLocalContext)
 
-  const currentPath = data?.currentPath || data?.trigger || '';
-  const show = flatedSource.get(currentPath);
-  const sources = appContext.config.sources;
-  const parentPath = show?.parent;
+  const currentPath = data?.currentPath || data?.trigger || ''
+  const show = flatedSource.get(currentPath)
+  const sources = appContext.config.sources
+  const parentPath = show?.parent
 
   const handleSidebarClick = (path: string) => {
     if (data) {
       updateWindow({
         ...data,
         currentPath: path,
-      });
+      })
     }
-  };
+  }
 
   const handleBack = () => {
     if (parentPath) {
-      handleSidebarClick(parentPath);
+      handleSidebarClick(parentPath)
     }
-  };
+  }
 
   return (
     <div className={styles.container}>
@@ -58,8 +57,8 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
                 [styles.active]: currentPath === source.path,
               })}
               onClick={(e) => {
-                e.stopPropagation();
-                handleSidebarClick(source.path);
+                e.stopPropagation()
+                handleSidebarClick(source.path)
               }}
               onPointerDown={(e) => e.stopPropagation()}
             >
@@ -97,6 +96,7 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
           >
             <GlassContainer className={styles.navControls} linear={false}>
               <button
+                type="button"
                 className={styles.navButton}
                 disabled={!parentPath}
                 onClick={handleBack}
@@ -105,6 +105,7 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
                 <ChevronLeft size={30} />
               </button>
               <button
+                type="button"
                 className={styles.navButton}
                 disabled={true}
                 title="Go Forward"
@@ -120,48 +121,25 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
             className={styles.toolbarControls}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            <button className={styles.toolbarButton}>
+            <button type="button" className={styles.toolbarButton}>
               <LayoutGrid size={16} />
             </button>
-            <button className={styles.toolbarButton}>
+            <button type="button" className={styles.toolbarButton}>
               <List size={16} />
             </button>
-            <button className={styles.toolbarButton}>
+            <button type="button" className={styles.toolbarButton}>
               <Search size={16} />
             </button>
           </div>
         </div>
         <div className={styles.content}>
-          {show?.children?.map((child) =>
-            child.type === 'floder' ? (
-              <Folder
-                key={child.path}
-                name={child.name}
-                source={child}
-                onClick={() => handleSidebarClick(child.path)}
-              />
-            ) : (
-              <div
-                key={child.path}
-                className={styles.appItem}
-                onClick={() => {
-                  if (child.url) {
-                    window.open(child.url, '_blank');
-                  }
-                }}
-              >
-                <div className={styles.iconWrapper}>
-                  <img
-                    src={child.icon}
-                    alt={child.name}
-                    className={styles.appIcon}
-                    style={child.style}
-                  />
-                </div>
-                <span className={styles.name}>{child.name}</span>
-              </div>
-            )
-          )}
+          {show?.children?.map((child) => (
+            <SourceItem
+              item={child}
+              key={child.path}
+              onClick={(child) => handleSidebarClick(child.path)}
+            />
+          ))}
           {(!show?.children || show.children.length === 0) && (
             <div
               style={{
@@ -182,5 +160,5 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

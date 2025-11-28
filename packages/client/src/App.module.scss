@@ -8,6 +8,11 @@
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
   color: white;
+  :global(.isDesktop) {
+    .name {
+      color: white;
+    }
+  }
 }
 
 .desktopGrid {

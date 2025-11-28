@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import styles from './Bg.module.scss';
+import styles from './Bg.module.scss'
+
 interface BgProps {
-  url: string;
-  bgType?: 'image' | 'video' | 'css';
+  url: string
+  bgType?: 'image' | 'video' | 'css'
 }
 export const Bg: React.FC<BgProps> = ({ url }) => {
   return (
@@ -10,6 +10,6 @@ export const Bg: React.FC<BgProps> = ({ url }) => {
       src={url}
       className={styles.bg}
       style={{ background: `url(${url})` }}
-    ></img>
-  );
-};
+    />
+  )
+}

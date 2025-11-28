@@ -1,17 +1,18 @@
-import { ContentRender } from '../Folder/ContentRender';
-import { Window } from '@/components/Window/Window';
-import { useContext } from 'react';
-import { AppContext, WindowsContext } from '@/context';
+import { use } from 'react'
+import { Window } from '@/components/Window/Window'
+import { AppContext, WindowsContext } from '@/context'
+import { WindowContent } from '../WindowContent/WindowContent'
+
 export const WindowManager: React.FC = () => {
-  const { flatedSource } = useContext(AppContext);
+  const { flatedSource } = use(AppContext)
   const {
-    activeWindows,
     closeWindow,
     focusWindow,
     updateWindow,
+    activeWindows,
     minimizeWindow,
     toggleMaximizeWindow,
-  } = useContext(WindowsContext);
+  } = use(WindowsContext)
   return (
     <div>
       {activeWindows.map((win) => (
@@ -35,14 +36,14 @@ export const WindowManager: React.FC = () => {
                 ...win.style,
                 ...updates,
               },
-            });
+            })
           }}
           hideControls={true}
           variant={win.type === 'folder' ? 'glass' : 'default'}
         >
-          <ContentRender data={win} />
+          <WindowContent data={win} />
         </Window>
       ))}
     </div>
-  );
-};
+  )
+}

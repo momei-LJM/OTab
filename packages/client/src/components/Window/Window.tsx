@@ -1,33 +1,32 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import styles from './Window.module.scss';
-import clsx from 'clsx';
-import { useRef } from 'react';
-import { useWindowInteraction } from '@/hooks/useWindowInteraction';
-import { ResizeHandles } from './ResizeHandles';
-import { WindowLocalContext } from './WindowLocalContext';
-import { WindowControls } from './WindowControls';
+import clsx from 'clsx'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useMemo, useRef } from 'react'
+import { useWindowInteraction } from '@/hooks/useWindowInteraction'
+import { ResizeHandles } from './ResizeHandles'
+import styles from './Window.module.scss'
+import { WindowControls } from './WindowControls'
+import { WindowLocalContext } from './WindowLocalContext'
 
 interface WindowProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  onFocus?: () => void;
-  onUpdate?: (updates: Partial<React.CSSProperties>) => void;
-  isMinimized?: boolean;
-  isMaximized?: boolean;
-  onMinimize?: () => void;
-  onMaximize?: () => void;
-  hideControls?: boolean;
-  variant?: 'default' | 'glass';
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
+  onFocus?: () => void
+  onUpdate?: (updates: Partial<React.CSSProperties>) => void
+  isMinimized?: boolean
+  isMaximized?: boolean
+  onMinimize?: () => void
+  onMaximize?: () => void
+  hideControls?: boolean
+  variant?: 'default' | 'glass'
 }
 
 export const Window = ({
   isOpen,
   onClose,
-  title,
   children,
   className,
   style,
@@ -39,7 +38,7 @@ export const Window = ({
   onMaximize,
   hideControls,
 }: WindowProps) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   const {
     style: localStyle,
@@ -49,13 +48,13 @@ export const Window = ({
     initialStyle: style,
     onUpdate,
     onFocus,
-  });
+  })
 
   // If no position is set, center it initially
   // We can rely on CSS for initial centering if left/top are unset
   // But once we drag, we set left/top.
   const hasPosition =
-    localStyle.left !== undefined || localStyle.top !== undefined;
+    localStyle.left !== undefined || localStyle.top !== undefined
 
   const effectiveStyle = isMaximized
     ? {
@@ -67,8 +66,11 @@ export const Window = ({
         transform: 'none',
         borderRadius: 0,
       }
-    : localStyle;
+    : localStyle
 
+  const localCtxValue = useMemo(() => {
+    return { handleDragStart, onClose, onMinimize, onMaximize }
+  }, [handleDragStart, onClose, onMinimize, onMaximize])
   return (
     <AnimatePresence>
       {isOpen && !isMinimized && (
@@ -98,9 +100,7 @@ export const Window = ({
                 : undefined
             }
           >
-            <WindowLocalContext.Provider
-              value={{ handleDragStart, onClose, onMinimize, onMaximize }}
-            >
+            <WindowLocalContext value={localCtxValue}>
               {/* Traffic Lights - Absolute Positioned */}
               {!hideControls && (
                 <div
@@ -112,10 +112,10 @@ export const Window = ({
               )}
 
               <div className={styles.contentArea}>{children}</div>
-            </WindowLocalContext.Provider>
+            </WindowLocalContext>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
+  )
+}

@@ -1,51 +1,46 @@
-import { OTabConfig } from '@/config';
-import { AppContext } from '@/context';
-import { ChevronDown, Search, X } from 'lucide-react';
-import React, {
-  FormEvent,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import styles from './SearchBar.module.scss';
-import { SEARCH_ENGINES } from '@/consts/config';
+import type { FormEvent } from 'react'
+import type { OTabConfig } from '@/config'
+import { ChevronDown, Search, X } from 'lucide-react'
+import React, { use, useEffect, useRef, useState } from 'react'
+import { SEARCH_ENGINES } from '@/consts/config'
+import { AppContext } from '@/context'
+import styles from './SearchBar.module.scss'
 
-type SearchEngine = OTabConfig['searchEngine'];
+type SearchEngine = OTabConfig['searchEngine']
 
-export const SearchBar: React.FC = ({ style }: WithStyle<{}>) => {
-  const { appContext, setAppContext } = useContext(AppContext);
-  const [query, setQuery] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+export const SearchBar: React.FC = () => {
+  const { appContext, setAppContext } = use(AppContext)
+  const [query, setQuery] = useState('')
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const currentEngine = appContext.config.searchEngine;
-  const engineInfo = SEARCH_ENGINES[currentEngine];
+  const currentEngine = appContext.config.searchEngine
+  const engineInfo = SEARCH_ENGINES[currentEngine]
 
   // 快捷键支持：Cmd/Ctrl + K 聚焦
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        inputRef.current?.focus();
+        e.preventDefault()
+        inputRef.current?.focus()
       }
-    };
-    window.addEventListener('keydown', handleGlobalKeyDown);
-    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, []);
+    }
+    window.addEventListener('keydown', handleGlobalKeyDown)
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown)
+  }, [])
 
   const handleSearch = (e: FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+    e.preventDefault()
+    if (!query.trim()) return
 
-    const searchUrl = engineInfo.url + encodeURIComponent(query.trim());
-    window.open(searchUrl, '_blank');
-  };
+    const searchUrl = engineInfo.url + encodeURIComponent(query.trim())
+    window.open(searchUrl, '_blank')
+  }
 
   const handleClear = () => {
-    setQuery('');
-    inputRef.current?.focus();
-  };
+    setQuery('')
+    inputRef.current?.focus()
+  }
 
   const handleEngineChange = (engine: SearchEngine) => {
     setAppContext((prev) => ({
@@ -54,16 +49,16 @@ export const SearchBar: React.FC = ({ style }: WithStyle<{}>) => {
         ...prev.config,
         searchEngine: engine,
       },
-    }));
-    setIsDropdownOpen(false);
-    inputRef.current?.focus();
-  };
+    }))
+    setIsDropdownOpen(false)
+    inputRef.current?.focus()
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      setIsDropdownOpen(false);
+      setIsDropdownOpen(false)
     }
-  };
+  }
 
   return (
     <div className={styles.searchBar} onKeyDown={handleKeyDown}>
@@ -150,5 +145,5 @@ export const SearchBar: React.FC = ({ style }: WithStyle<{}>) => {
         />
       )}
     </div>
-  );
-};
+  )
+}

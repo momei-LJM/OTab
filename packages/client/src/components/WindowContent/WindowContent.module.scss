@@ -1,0 +1,177 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  padding-top: 0; // Reset padding
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  // Background is handled by the parent window transparency or we can set a slight tint
+  // background: rgba(0, 0, 0, 0.02);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+  @media (prefers-color-scheme: dark) {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+.sidebarSpacer {
+  height: 52px; // Space for traffic lights
+  flex-shrink: 0;
+}
+
+.sidebarGroup {
+  margin-bottom: 16px;
+}
+
+.sidebarGroupTitle {
+  padding: 0 20px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  margin: 0 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #444;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.1s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #ccc;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+}
+
+.main {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.navControls {
+  display: flex;
+  gap: 8px;
+  width: 75px;
+  padding: 0 5px;
+  justify-content: space-between;
+}
+
+.toolbarControls {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.toolbarButton {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: #ccc;
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.navButton {
+  width: 28px;
+  height: 40px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.2s;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+}
+
+.pathTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+
+  @media (prefers-color-scheme: dark) {
+    color: #fff;
+  }
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  align-content: flex-start;
+  overflow-y: auto;
+}

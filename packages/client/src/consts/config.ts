@@ -1,4 +1,4 @@
-export const prefix = 'otab';
+export const prefix = 'otab'
 
 export const SEARCH_ENGINES = {
   google: {
@@ -26,4 +26,4 @@ export const SEARCH_ENGINES = {
     icon: '/icons/favicon_yahoo.ico',
     url: 'https://search.yahoo.com/search?p=',
   },
-} as const;
+} as const
