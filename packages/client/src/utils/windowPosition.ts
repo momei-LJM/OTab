@@ -1,8 +1,8 @@
 import { CSSProperties } from 'react';
 
 // 窗口默认尺寸
-const DEFAULT_WINDOW_WIDTH = 800;
-const DEFAULT_WINDOW_HEIGHT = 600;
+const DEFAULT_WINDOW_WIDTH = 950;
+const DEFAULT_WINDOW_HEIGHT = 500;
 
 // 级联偏移量
 const CASCADE_OFFSET_X = 30;

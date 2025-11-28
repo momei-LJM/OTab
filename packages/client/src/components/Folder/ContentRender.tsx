@@ -16,6 +16,7 @@ import {
 import clsx from 'clsx';
 import { WindowLocalContext } from '../Window/WindowLocalContext';
 import { WindowSidebar } from '../Window/WindowSidebar';
+import { GlassContainer } from '../GlassContainer';
 
 export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
   data,
@@ -94,21 +95,23 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
             className={styles.navControls}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            <button
-              className={styles.navButton}
-              disabled={!parentPath}
-              onClick={handleBack}
-              title="Go Back"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              className={styles.navButton}
-              disabled={true}
-              title="Go Forward"
-            >
-              <ChevronRight size={16} />
-            </button>
+            <GlassContainer className={styles.navControls} linear={false}>
+              <button
+                className={styles.navButton}
+                disabled={!parentPath}
+                onClick={handleBack}
+                title="Go Back"
+              >
+                <ChevronLeft size={30} />
+              </button>
+              <button
+                className={styles.navButton}
+                disabled={true}
+                title="Go Forward"
+              >
+                <ChevronRight size={30} />
+              </button>
+            </GlassContainer>
           </div>
 
           <span className={styles.pathTitle}>{show?.name}</span>

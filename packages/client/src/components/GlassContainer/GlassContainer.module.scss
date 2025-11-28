@@ -1,0 +1,19 @@
+.glassContainer {
+  border-radius: 24px;
+
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+  box-shadow:
+    0 4px 20px -10px rgba(0, 0, 0, 0.1),
+    0 2px 20px 10px rgba(0, 0, 0, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+.linear {
+  background: linear-gradient(
+    325deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(240, 248, 250, 0.3) 50%,
+    rgba(230, 250, 255, 0.5) 100%
+  );
+}
