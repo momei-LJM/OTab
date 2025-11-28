@@ -37,6 +37,8 @@ export const WindowManager: React.FC = () => {
               },
             });
           }}
+          hideControls={true}
+          variant={win.type === 'folder' ? 'glass' : 'default'}
         >
           <ContentRender data={win} />
         </Window>

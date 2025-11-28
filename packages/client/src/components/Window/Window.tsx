@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Maximize2 } from 'lucide-react';
 import styles from './Window.module.scss';
 import clsx from 'clsx';
 import { useRef } from 'react';
 import { useWindowInteraction } from '@/hooks/useWindowInteraction';
 import { ResizeHandles } from './ResizeHandles';
 import { WindowLocalContext } from './WindowLocalContext';
+import { WindowControls } from './WindowControls';
 
 interface WindowProps {
   isOpen: boolean;
@@ -20,6 +20,8 @@ interface WindowProps {
   isMaximized?: boolean;
   onMinimize?: () => void;
   onMaximize?: () => void;
+  hideControls?: boolean;
+  variant?: 'default' | 'glass';
 }
 
 export const Window = ({
@@ -35,6 +37,7 @@ export const Window = ({
   isMaximized,
   onMinimize,
   onMaximize,
+  hideControls,
 }: WindowProps) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -95,41 +98,19 @@ export const Window = ({
                 : undefined
             }
           >
-            {/* Traffic Lights - Absolute Positioned */}
-            <div
-              className={styles.trafficLightsOverlay}
-              onPointerDown={(e) => e.stopPropagation()}
+            <WindowLocalContext.Provider
+              value={{ handleDragStart, onClose, onMinimize, onMaximize }}
             >
-              <button
-                className={clsx(styles.trafficLight, styles.close)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClose();
-                }}
-              >
-                <X size={8} />
-              </button>
-              <button
-                className={clsx(styles.trafficLight, styles.minimize)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMinimize?.();
-                }}
-              >
-                <Minus size={8} />
-              </button>
-              <button
-                className={clsx(styles.trafficLight, styles.maximize)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMaximize?.();
-                }}
-              >
-                <Maximize2 size={8} />
-              </button>
-            </div>
+              {/* Traffic Lights - Absolute Positioned */}
+              {!hideControls && (
+                <div
+                  className={styles.trafficLightsOverlay}
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <WindowControls />
+                </div>
+              )}
 
-            <WindowLocalContext.Provider value={{ handleDragStart }}>
               <div className={styles.contentArea}>{children}</div>
             </WindowLocalContext.Provider>
           </motion.div>

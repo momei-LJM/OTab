@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { WindowLocalContext } from '../Window/WindowLocalContext';
+import { WindowSidebar } from '../Window/WindowSidebar';
 
 export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
   data,
@@ -46,9 +47,7 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
   return (
     <div className={styles.container}>
       {/* Sidebar */}
-      <div className={styles.sidebar} onPointerDown={handleDragStart}>
-        <div className={styles.sidebarSpacer} />
-
+      <WindowSidebar>
         <div className={styles.sidebarGroup}>
           <div className={styles.sidebarGroupTitle}>Favorites</div>
           {sources.map((source) => (
@@ -86,7 +85,7 @@ export const ContentRender: React.FC<{ data?: WindowSnapshot }> = ({
             <span>iCloud Drive</span>
           </div>
         </div>
-      </div>
+      </WindowSidebar>
 
       {/* Main Content */}
       <div className={styles.main}>
