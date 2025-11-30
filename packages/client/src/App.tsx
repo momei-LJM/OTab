@@ -12,8 +12,8 @@ import { use } from 'react'
 import styles from '@/App.module.scss'
 import { Bg } from '@/components/Bg/index'
 import { Clock } from '@/components/Clock'
+import { DesktopGrid } from '@/components/DesktopGrid'
 import { Dock, DockItem } from '@/components/Dock/Dock'
-import { Folder } from '@/components/Folder/Folder'
 import { SearchBar } from '@/components/SearchBar'
 import { WindowManager } from '@/components/WindowManager'
 import { AppContext, WindowsContext } from '@/context'
@@ -56,16 +56,7 @@ function App() {
     <div className={styles.desktop}>
       <Bg url={ctx.appContext.config.backgroundImageUrl!} />
       {/* Desktop Icons Area */}
-      <div className={styles.desktopGrid}>
-        {ctx.appContext.config.sources.map((source) => (
-          <Folder
-            key={source.path}
-            name={source.name}
-            source={source}
-            className="isDesktop"
-          />
-        ))}
-      </div>
+      <DesktopGrid />
 
       {/* Main Content / Wallpaper Area */}
       <div className={styles.centerContent}>
