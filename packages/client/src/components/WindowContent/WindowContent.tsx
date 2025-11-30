@@ -62,13 +62,7 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
               }}
               onPointerDown={(e) => e.stopPropagation()}
             >
-              <FolderIcon
-                size={16}
-                fill={currentPath === source.path ? '#007aff' : 'currentColor'}
-                stroke={
-                  currentPath === source.path ? '#007aff' : 'currentColor'
-                }
-              />
+              <FolderIcon size={16} stroke={'rgba(24,24,24)'} />
               <span>{source.name}</span>
             </div>
           ))}

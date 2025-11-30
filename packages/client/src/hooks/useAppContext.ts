@@ -1,6 +1,6 @@
 import type { AppCtx, Source } from '@/config'
-import { useMemo, useState } from 'react'
-import { getCtxStorage } from '@/storage'
+import { useEffect, useMemo, useState } from 'react'
+import { getCtxStorage, setCtxStorage } from '@/storage'
 import { TransformAdapter, tree2Map } from '@/utils/common'
 import { logger } from '@/utils/logger'
 import itabData from '../../private.itabdata.json'
@@ -44,14 +44,19 @@ export function useAppContext() {
   const transformer = new TransformAdapter({ source: 'itab' })
   const sources = transformer.transformSource(itabData.navConfig)
 
-  const initData = storageCtx || defaultData
-  const [appContext, setAppContext] = useState<AppCtx>({
-    ...initData,
+  // 只在第一次加载（没有存储数据）时合并 itabData 的数据
+  const initData = storageCtx || {
+    ...defaultData,
     config: {
-      ...initData.config,
-      sources: [...initData.config.sources, ...sources],
+      ...defaultData.config,
+      sources: [...defaultData.config.sources, ...sources],
     },
-  })
+  }
+  const [appContext, setAppContext] = useState<AppCtx>(initData)
+
+  useEffect(() => {
+    setCtxStorage(appContext)
+  }, [appContext])
 
   const flatedSource = useMemo(() => {
     return tree2Map<Source>(appContext.config.sources, 'path')

@@ -1,12 +1,14 @@
 import type { SnapShot, WindowSnapshot } from '@/config'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { getCtxStorage } from '@/storage'
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { AppContext } from '@/context'
+import { getCtxStorage, setCtxStorage } from '@/storage'
 import { logger } from '@/utils/logger'
 import { calcWindowPosition, positionToStyles } from '@/utils/windowPosition'
 
 export const useWindowsContext = () => {
   logger.info('WindowsContext 执行')
   const storageCtx = getCtxStorage()
+  const { appContext } = use(AppContext)
 
   const initWinowsSnapshot: SnapShot['activeWindows']
     = storageCtx?.snapshot?.activeWindows ?? []
@@ -21,6 +23,11 @@ export const useWindowsContext = () => {
   )
 
   const [activeWindows, setAtiveWindows] = useState(initWinowsSnapshot)
+
+  useEffect(() => {
+    setCtxStorage({ ...appContext, snapshot: { activeWindows } })
+  }, [activeWindows, appContext])
+
   const updateWindow = useCallback((window: WindowSnapshot) => {
     setAtiveWindows((prev) => {
       const target = prev.find(w => w.trigger === window.trigger)
