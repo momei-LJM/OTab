@@ -20,7 +20,7 @@ export default defineConfig({
   plugins: [
     react(),
     crx({ manifest }),
-    zip({ outDir: 'release', outFileName: `crx-${name}-${version}.zip` }),
+    zip({ outDir: 'release', outFileName: `crx-OTab_Client-${version}.zip` }),
   ],
   server: {
     port: 5173,

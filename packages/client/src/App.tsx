@@ -55,10 +55,8 @@ function App() {
   return (
     <div className={styles.desktop}>
       <Bg url={ctx.appContext.config.backgroundImageUrl!} />
-      {/* Desktop Icons Area */}
       <DesktopGrid />
 
-      {/* Main Content / Wallpaper Area */}
       <div className={styles.centerContent}>
         <Clock />
         <SearchBar />
