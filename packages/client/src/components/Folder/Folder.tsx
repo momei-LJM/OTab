@@ -1,8 +1,7 @@
 import type { Source } from '@/config'
 import clsx from 'clsx'
 import { Folder as FolderIcon } from 'lucide-react'
-import { use } from 'react'
-import { WindowsContext } from '@/context'
+import { useAppStore } from '@/store'
 import { getCssVar } from '@/utils'
 import styles from './Folder.module.scss'
 
@@ -14,7 +13,7 @@ interface FolderProps {
 }
 
 export const Folder = ({ name, onClick, className, source }: FolderProps) => {
-  const { createWindow } = use(WindowsContext)
+  const createWindow = useAppStore((state) => state.createWindow)
 
   const handleOpen = (e: React.MouseEvent) => {
     e.stopPropagation()

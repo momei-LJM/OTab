@@ -8,7 +8,6 @@ import {
   Settings,
   Terminal,
 } from 'lucide-react'
-import { use } from 'react'
 import styles from '@/App.module.scss'
 import { Bg } from '@/components/Bg/index'
 import { Clock } from '@/components/Clock'
@@ -16,17 +15,23 @@ import { DesktopGrid } from '@/components/DesktopGrid'
 import { Dock, DockItem } from '@/components/Dock/Dock'
 import { SearchBar } from '@/components/SearchBar'
 import { WindowManager } from '@/components/WindowManager'
-import { AppContext, WindowsContext } from '@/context'
+import {
+  useActiveWindows,
+  useAppStore,
+  useConfig,
+  useFlatedSource,
+} from '@/store'
 
 function App() {
-  const ctx = use(AppContext)
-  const { activeWindows, focusWindow, createWindow, updateWindow } =
-    use(WindowsContext)
+  const config = useConfig()
+  const activeWindows = useActiveWindows()
+  const flatedSource = useFlatedSource()
+  const { createWindow, updateWindow, focusWindow } = useAppStore()
 
   const handleFilesClick = () => {
     if (activeWindows.length === 0) {
       // Open default folder (e.g. first source)
-      const firstSource = ctx.appContext.config.sources[0]
+      const firstSource = config.sources[0]
       if (firstSource) {
         createWindow({
           type: 'folder',
@@ -43,9 +48,9 @@ function App() {
       )[0]
       if (topWindow) {
         if (topWindow.isMinimized) {
-          updateWindow({ ...topWindow, isMinimized: false })
+          updateWindow({ trigger: topWindow.trigger, isMinimized: false })
         }
-        focusWindow(topWindow)
+        focusWindow(topWindow.trigger)
       }
     }
   }
@@ -54,7 +59,7 @@ function App() {
 
   return (
     <div className={styles.desktop}>
-      <Bg url={ctx.appContext.config.backgroundImageUrl!} />
+      <Bg url={config.backgroundImageUrl!} />
       <DesktopGrid />
 
       <div className={styles.centerContent}>
@@ -100,10 +105,10 @@ function App() {
             <DockItem
               key={win.trigger}
               onClick={() => {
-                updateWindow({ ...win, isMinimized: false })
-                focusWindow(win)
+                updateWindow({ trigger: win.trigger, isMinimized: false })
+                focusWindow(win.trigger)
               }}
-              title={ctx.flatedSource.get(win.trigger)?.name || 'Folder'}
+              title={flatedSource.get(win.trigger)?.name || 'Folder'}
             >
               <FolderIcon />
             </DockItem>

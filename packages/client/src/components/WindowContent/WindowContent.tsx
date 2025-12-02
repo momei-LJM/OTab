@@ -10,7 +10,7 @@ import {
   Search,
 } from 'lucide-react'
 import { use } from 'react'
-import { AppContext, WindowsContext } from '@/context'
+import { useAppStore, useConfig, useFlatedSource } from '@/store'
 import { GlassContainer } from '../GlassContainer'
 import { SourceItem } from '../Source'
 import { WindowLocalContext } from '../Window/WindowLocalContext'
@@ -20,19 +20,20 @@ import styles from './WindowContent.module.scss'
 export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
   data,
 }) => {
-  const { flatedSource, appContext } = use(AppContext)
-  const { updateWindow } = use(WindowsContext)
+  const flatedSource = useFlatedSource()
+  const config = useConfig()
+  const updateWindow = useAppStore((state) => state.updateWindow)
   const { handleDragStart } = use(WindowLocalContext)
 
   const currentPath = data?.currentPath || data?.trigger || ''
   const show = flatedSource.get(currentPath)
-  const sources = appContext.config.sources
+  const sources = config.sources
   const parentPath = show?.parent
 
   const handleSidebarClick = (path: string) => {
     if (data) {
       updateWindow({
-        ...data,
+        trigger: data.trigger,
         currentPath: path,
       })
     }

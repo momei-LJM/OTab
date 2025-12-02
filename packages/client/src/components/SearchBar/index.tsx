@@ -1,20 +1,21 @@
 import type { FormEvent } from 'react'
 import type { OTabConfig } from '@/config'
 import { ChevronDown, Search, X } from 'lucide-react'
-import React, { use, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SEARCH_ENGINES } from '@/consts/config'
-import { AppContext } from '@/context'
+import { useAppStore, useConfig } from '@/store'
 import styles from './SearchBar.module.scss'
 
 type SearchEngine = OTabConfig['searchEngine']
 
 export const SearchBar: React.FC = () => {
-  const { appContext, setAppContext } = use(AppContext)
+  const config = useConfig()
+  const updateConfig = useAppStore((state) => state.updateConfig)
   const [query, setQuery] = useState('')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const currentEngine = appContext.config.searchEngine
+  const currentEngine = config.searchEngine
   const engineInfo = SEARCH_ENGINES[currentEngine]
 
   // 快捷键支持：Cmd/Ctrl + K 聚焦
@@ -43,13 +44,7 @@ export const SearchBar: React.FC = () => {
   }
 
   const handleEngineChange = (engine: SearchEngine) => {
-    setAppContext((prev) => ({
-      ...prev,
-      config: {
-        ...prev.config,
-        searchEngine: engine,
-      },
-    }))
+    updateConfig({ searchEngine: engine })
     setIsDropdownOpen(false)
     inputRef.current?.focus()
   }

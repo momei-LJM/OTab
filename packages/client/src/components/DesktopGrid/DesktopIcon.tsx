@@ -1,9 +1,9 @@
 import type { Source } from '@/config'
 import clsx from 'clsx'
 import { Folder as FolderIcon, Globe } from 'lucide-react'
-import { use, useRef } from 'react'
-import { WindowsContext } from '@/context'
+import { useRef } from 'react'
 import { useDrag } from '@/hooks/useDrag'
+import { useAppStore } from '@/store'
 import { getCssVar } from '@/utils'
 import styles from './DesktopGrid.module.scss'
 
@@ -17,7 +17,7 @@ const hasPosition = (style?: React.CSSProperties) => {
 }
 
 export const DesktopIcon = ({ source, onPositionChange }: DesktopIconProps) => {
-  const { createWindow } = use(WindowsContext)
+  const createWindow = useAppStore((state) => state.createWindow)
   const iconRef = useRef<HTMLDivElement>(null)
 
   const { isDragging, hasDragged, dragStyle, handleDragStart } = useDrag(

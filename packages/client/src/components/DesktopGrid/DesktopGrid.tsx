@@ -1,29 +1,13 @@
-import type { CSSProperties } from 'react'
-import { use, useCallback } from 'react'
-import { AppContext } from '@/context'
+import { useAppStore, useConfig } from '@/store'
 import styles from './DesktopGrid.module.scss'
 import { DesktopIcon } from './DesktopIcon'
 
 export const DesktopGrid = () => {
-  const { appContext, setAppContext } = use(AppContext)
+  const config = useConfig()
+  const updateSourceStyle = useAppStore((state) => state.updateSourceStyle)
 
-  const desktopSources = appContext.config.sources.filter(
+  const desktopSources = config.sources.filter(
     (source) => source.parent === 'desktop'
-  )
-
-  const updateSourceStyle = useCallback(
-    (path: string, style: CSSProperties) => {
-      setAppContext((prev) => ({
-        ...prev,
-        config: {
-          ...prev.config,
-          sources: prev.config.sources.map((s) =>
-            s.path === path ? { ...s, style: { ...s.style, ...style } } : s
-          ),
-        },
-      }))
-    },
-    [setAppContext]
   )
 
   return (

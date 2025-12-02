@@ -1,18 +1,18 @@
-import { use } from 'react'
 import { Window } from '@/components/Window/Window'
-import { AppContext, WindowsContext } from '@/context'
+import { useActiveWindows, useAppStore, useFlatedSource } from '@/store'
 import { WindowContent } from '../WindowContent/WindowContent'
 
 export const WindowManager: React.FC = () => {
-  const { flatedSource } = use(AppContext)
+  const flatedSource = useFlatedSource()
+  const activeWindows = useActiveWindows()
   const {
     closeWindow,
     focusWindow,
     updateWindow,
-    activeWindows,
     minimizeWindow,
     toggleMaximizeWindow,
-  } = use(WindowsContext)
+  } = useAppStore()
+
   return (
     <div>
       {activeWindows.map((win) => (
@@ -28,10 +28,10 @@ export const WindowManager: React.FC = () => {
             flatedSource.get(win.currentPath || win.trigger)?.name || 'unknown'
           }
           style={{ zIndex: win.zIndex, ...(win.style || {}) }}
-          onFocus={() => focusWindow(win)}
+          onFocus={() => focusWindow(win.trigger)}
           onUpdate={(updates) => {
             updateWindow({
-              ...win,
+              trigger: win.trigger,
               style: {
                 ...win.style,
                 ...updates,
