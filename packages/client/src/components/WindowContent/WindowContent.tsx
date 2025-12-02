@@ -7,15 +7,79 @@ import {
   HardDrive,
   LayoutGrid,
   List,
-  Search,
 } from 'lucide-react'
-import { use } from 'react'
+import React, { use, useState } from 'react'
 import { useAppStore, useConfig, useFlatedSource } from '@/store'
+import { getCssVar } from '@/utils'
 import { GlassContainer } from '../GlassContainer'
 import { SourceItem } from '../Source'
 import { WindowLocalContext } from '../Window/WindowLocalContext'
 import { WindowSidebar } from '../Window/WindowSidebar'
 import styles from './WindowContent.module.scss'
+import { WindowSearch } from './WindowSearch'
+
+const EmptyFolder: React.FC = () => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#888',
+        flexDirection: 'column',
+        gap: 10,
+      }}
+    >
+      <FolderIcon size={48} opacity={0.2} />
+      <span>Empty Folder</span>
+    </div>
+  )
+}
+
+interface LayoutProps {
+  layout: 'grid' | 'list'
+  items: any[]
+  onItemClick: (item: any) => void
+}
+
+const Layout: React.FC<LayoutProps> = ({ layout, items, onItemClick }) => {
+  if (!items?.length) return <EmptyFolder />
+
+  if (layout === 'grid') {
+    return (
+      <div className={styles.content}>
+        {items.map((child) => (
+          <SourceItem
+            item={child}
+            key={child.path}
+            onClick={(child) => onItemClick(child)}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className={styles.listContainer}>
+      {items.map((child) => (
+        <div
+          key={child.path}
+          className={styles.listItem}
+          onClick={() => onItemClick(child)}
+        >
+          <SourceItem
+            item={child}
+            size={24}
+            onClick={() => onItemClick(child)}
+          />
+          <span className={styles.listName}>{child.name}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
   data,
@@ -25,24 +89,55 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
   const updateWindow = useAppStore((state) => state.updateWindow)
   const { handleDragStart } = use(WindowLocalContext)
 
+  const [layoutState, setLayoutState] = useState<'list' | 'grid'>('grid')
+  const [searchQuery, setSearchQuery] = useState('')
+
   const currentPath = data?.currentPath || data?.trigger || ''
   const show = flatedSource.get(currentPath)
   const sources = config.sources
-  const parentPath = show?.parent
+
+  const history = data?.history || [currentPath]
+  const historyIndex = data?.historyIndex ?? 0
+  const canGoBack = historyIndex > 0
+  const canGoForward = historyIndex < history.length - 1
+
+  const filteredChildren = show?.children?.filter((child) =>
+    child.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const handleSidebarClick = (path: string) => {
-    if (data) {
-      updateWindow({
-        trigger: data.trigger,
-        currentPath: path,
-      })
+    if (!data) {
+      return
     }
+    if (path === currentPath) return
+
+    const newHistory = history.slice(0, historyIndex + 1).concat(path)
+    updateWindow({
+      trigger: data.trigger,
+      currentPath: path,
+      history: newHistory,
+      historyIndex: newHistory.length - 1,
+    })
   }
 
   const handleBack = () => {
-    if (parentPath) {
-      handleSidebarClick(parentPath)
-    }
+    if (!canGoBack || !data) return
+    const newIndex = historyIndex - 1
+    updateWindow({
+      trigger: data.trigger,
+      currentPath: history[newIndex],
+      historyIndex: newIndex,
+    })
+  }
+
+  const handleForward = () => {
+    if (!canGoForward || !data) return
+    const newIndex = historyIndex + 1
+    updateWindow({
+      trigger: data.trigger,
+      currentPath: history[newIndex],
+      historyIndex: newIndex,
+    })
   }
 
   return (
@@ -93,7 +188,7 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
               <button
                 type="button"
                 className={styles.navButton}
-                disabled={!parentPath}
+                disabled={!canGoBack}
                 onClick={handleBack}
                 title="Go Back"
               >
@@ -102,7 +197,8 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
               <button
                 type="button"
                 className={styles.navButton}
-                disabled={true}
+                disabled={!canGoForward}
+                onClick={handleForward}
                 title="Go Forward"
               >
                 <ChevronRight size={30} />
@@ -116,43 +212,32 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
             className={styles.toolbarControls}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            <button type="button" className={styles.toolbarButton}>
+            <button
+              type="button"
+              className={clsx(styles.toolbarButton, {
+                [styles.active]: layoutState === 'grid',
+              })}
+              onClick={() => setLayoutState('grid')}
+            >
               <LayoutGrid size={16} />
             </button>
-            <button type="button" className={styles.toolbarButton}>
+            <button
+              type="button"
+              className={clsx(styles.toolbarButton, {
+                [styles.active]: layoutState === 'list',
+              })}
+              onClick={() => setLayoutState('list')}
+            >
               <List size={16} />
             </button>
-            <button type="button" className={styles.toolbarButton}>
-              <Search size={16} />
-            </button>
+            <WindowSearch onSearch={setSearchQuery} />
           </div>
         </div>
-        <div className={styles.content}>
-          {show?.children?.map((child) => (
-            <SourceItem
-              item={child}
-              key={child.path}
-              onClick={(child) => handleSidebarClick(child.path)}
-            />
-          ))}
-          {(!show?.children || show.children.length === 0) && (
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#888',
-                flexDirection: 'column',
-                gap: 10,
-              }}
-            >
-              <FolderIcon size={48} opacity={0.2} />
-              <span>Empty Folder</span>
-            </div>
-          )}
-        </div>
+        <Layout
+          layout={layoutState}
+          items={filteredChildren || []}
+          onItemClick={(child) => handleSidebarClick(child.path)}
+        />
       </div>
     </div>
   )

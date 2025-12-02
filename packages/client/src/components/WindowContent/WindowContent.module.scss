@@ -128,10 +128,18 @@
     background: rgba(0, 0, 0, 0.05);
   }
 
+  &.active {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+  }
+
   @media (prefers-color-scheme: dark) {
     color: #ccc;
     &:hover {
       background: rgba(255, 255, 255, 0.1);
+    }
+    &.active {
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 }
@@ -174,4 +182,53 @@
   height: 100%;
   align-content: flex-start;
   overflow-y: auto;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  gap: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+.listIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.listName {
+  font-size: 13px;
+  color: #333;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (prefers-color-scheme: dark) {
+    color: #eee;
+  }
 }
