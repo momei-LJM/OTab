@@ -11,11 +11,12 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
     "@eslint-react/eslint-plugin": "^2.3.9",
+    "@types/node": "catalog:",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "prettier": "^3.6.2",
-    "typescript": "^5.0.0",
+    "typescript": "catalog:",
     "vite": "^7.2.4"
   },
   "dependencies": {

@@ -1,2 +1,13 @@
 packages:
-  - "packages/*"
+  - 'packages/*'
+
+catalog:
+  # React
+  react: ^19.2.0
+  react-dom: ^19.2.0
+  '@types/react': ^19.2.7
+  '@types/react-dom': ^19.2.3
+
+  # Build Tools
+  typescript: ^5.9.3
+  '@types/node': ^24.10.1
