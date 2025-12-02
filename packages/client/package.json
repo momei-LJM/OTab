@@ -16,6 +16,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@heroui/react": "^2.8.5",
+    "@heroui/system": "^2.4.23",
+    "@heroui/theme": "^2.4.23",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
     "immer": "^11.0.1",
@@ -27,11 +30,13 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
     "@crxjs/vite-plugin": "^2.2.1",
+    "@tailwindcss/vite": "^4.1.17",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^5.1.1",
     "sass": "^1.94.2",
+    "tailwindcss": "^4.1.17",
     "typescript": "catalog:",
     "vite": "^7.2.4",
     "vite-plugin-zip-pack": "^1.2.4"
