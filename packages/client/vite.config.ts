@@ -9,8 +9,7 @@ import manifest from './manifest.config.js'
 import { name, version } from './package.json'
 
 // https://github.com/nicolo-ribaudo/crxjs/issues/971
-// 设置环境变量禁用 React Refresh 以避免 @crxjs/vite-plugin 冲突
-process.env.VITE_CRX_DEVTOOLS = 'true'
+process.env.VITE_CRX_DEVTOOLS = process.env.VITE_CRX_DEVTOOLS ?? 'false'
 
 export default defineConfig({
   resolve: {

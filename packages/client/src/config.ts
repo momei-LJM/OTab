@@ -11,7 +11,7 @@ export interface Source {
   children?: Source[]
 }
 export interface WindowSnapshot {
-  type: 'folder' | 'app'
+  type: 'folder' | 'app' | 'system:setting'
   trigger: string // 触发窗口打开的来源 path
   currentPath?: string // 当前显示的路径，用于窗口内导航
   history?: string[] // 导航历史

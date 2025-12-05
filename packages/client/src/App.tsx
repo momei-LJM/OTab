@@ -115,7 +115,16 @@ function App() {
           ))}
 
           <div className={styles.divider} />
-          <DockItem title="Settings">
+          <DockItem
+            title="Settings"
+            onClick={() =>
+              createWindow({
+                trigger: 'system:setting',
+                type: 'system:setting',
+                isOpen: true,
+              })
+            }
+          >
             <Settings />
           </DockItem>
         </Dock>

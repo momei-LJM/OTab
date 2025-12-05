@@ -13,6 +13,7 @@ import { useAppStore, useConfig, useFlatedSource } from '@/store'
 import { getCssVar } from '@/utils'
 import { GlassContainer } from '../GlassContainer'
 import { SourceItem } from '../Source'
+import { SystemSettings } from '../SystemSettings'
 import { WindowLocalContext } from '../Window/WindowLocalContext'
 import { WindowSidebar } from '../Window/WindowSidebar'
 import styles from './WindowContent.module.scss'
@@ -139,6 +140,7 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
       historyIndex: newIndex,
     })
   }
+  const isSystemSetting = data?.type === 'system:setting'
 
   return (
     <div className={styles.container}>
@@ -163,81 +165,75 @@ export const WindowContent: React.FC<{ data?: WindowSnapshot }> = ({
             </div>
           ))}
         </div>
-
-        <div className={styles.sidebarGroup}>
-          <div className={styles.sidebarGroupTitle}>Locations</div>
-          <div className={styles.sidebarItem}>
-            <HardDrive size={16} />
-            <span>Macintosh HD</span>
-          </div>
-          <div className={styles.sidebarItem}>
-            <HardDrive size={16} />
-            <span>iCloud Drive</span>
-          </div>
-        </div>
       </WindowSidebar>
 
       {/* Main Content */}
       <div className={styles.main}>
-        <div className={styles.toolbar} onPointerDown={handleDragStart}>
-          <div
-            className={styles.navControls}
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <GlassContainer className={styles.navControls} linear={false}>
-              <button
-                type="button"
-                className={styles.navButton}
-                disabled={!canGoBack}
-                onClick={handleBack}
-                title="Go Back"
+        {isSystemSetting ? (
+          <SystemSettings />
+        ) : (
+          <>
+            <div className={styles.toolbar} onPointerDown={handleDragStart}>
+              <div
+                className={styles.navControls}
+                onPointerDown={(e) => e.stopPropagation()}
               >
-                <ChevronLeft size={30} />
-              </button>
-              <button
-                type="button"
-                className={styles.navButton}
-                disabled={!canGoForward}
-                onClick={handleForward}
-                title="Go Forward"
+                <GlassContainer className={styles.navControls} linear={false}>
+                  <button
+                    type="button"
+                    className={styles.navButton}
+                    disabled={!canGoBack}
+                    onClick={handleBack}
+                    title="Go Back"
+                  >
+                    <ChevronLeft size={30} />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.navButton}
+                    disabled={!canGoForward}
+                    onClick={handleForward}
+                    title="Go Forward"
+                  >
+                    <ChevronRight size={30} />
+                  </button>
+                </GlassContainer>
+              </div>
+
+              <span className={styles.pathTitle}>{show?.name}</span>
+
+              <div
+                className={styles.toolbarControls}
+                onPointerDown={(e) => e.stopPropagation()}
               >
-                <ChevronRight size={30} />
-              </button>
-            </GlassContainer>
-          </div>
-
-          <span className={styles.pathTitle}>{show?.name}</span>
-
-          <div
-            className={styles.toolbarControls}
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className={clsx(styles.toolbarButton, {
-                [styles.active]: layoutState === 'grid',
-              })}
-              onClick={() => setLayoutState('grid')}
-            >
-              <LayoutGrid size={16} />
-            </button>
-            <button
-              type="button"
-              className={clsx(styles.toolbarButton, {
-                [styles.active]: layoutState === 'list',
-              })}
-              onClick={() => setLayoutState('list')}
-            >
-              <List size={16} />
-            </button>
-            <WindowSearch onSearch={setSearchQuery} />
-          </div>
-        </div>
-        <Layout
-          layout={layoutState}
-          items={filteredChildren || []}
-          onItemClick={(child) => handleSidebarClick(child.path)}
-        />
+                <button
+                  type="button"
+                  className={clsx(styles.toolbarButton, {
+                    [styles.active]: layoutState === 'grid',
+                  })}
+                  onClick={() => setLayoutState('grid')}
+                >
+                  <LayoutGrid size={16} />
+                </button>
+                <button
+                  type="button"
+                  className={clsx(styles.toolbarButton, {
+                    [styles.active]: layoutState === 'list',
+                  })}
+                  onClick={() => setLayoutState('list')}
+                >
+                  <List size={16} />
+                </button>
+                <WindowSearch onSearch={setSearchQuery} />
+              </div>
+            </div>
+            <Layout
+              layout={layoutState}
+              items={filteredChildren || []}
+              onItemClick={(child) => handleSidebarClick(child.path)}
+            />
+          </>
+        )}
       </div>
     </div>
   )
